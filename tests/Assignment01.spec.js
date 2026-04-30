@@ -100,6 +100,8 @@ test("Test to book for an event", async ({ browser }) => {
 
     const eventCardsCount=await event_cards.count();
 
+    // Trying to check the new branch
+
 
     for(let i=0;i<eventCardsCount;i++){
         await event_cards.nth(i).waitFor();
