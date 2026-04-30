@@ -4,6 +4,77 @@ const{test,expect}=require('@playwright/test');
 test("Lanunching koerber one",async({browser})=>{
 
 
+    let age=0;
+    let text = (age < 18) ? "Minor" : "Adult";
+
+
+
+    let employees=["Naveen","Mukesh","Kicha","Suresh"];
+
+    for(let i=0;i<employees.length;i++){    
+        console.log("Weclcome"+employees[i]+"to Koerber");                              
+    }   
+    //for loop
+
+
+
+
+
+
+    //SWITCH CASE
+
+    switch(age){
+        case 18:
+            console.log("You are 18 years old");
+            break;
+        case 26:
+            console.log("You are 26 years old");
+            break;
+        default:
+            console.log("You are neither 18 nor 26 years old");
+    }
+
+
+
+
+
+
+
+
+    //terranary operator
+
+   
+
+    console.log(text);  
+
+
+    // a simple function to print the name 
+    function printNames(names){
+        console.log("Welcome to Koerber "+names);
+    }
+
+    function compareNumbers(num1,num2){
+
+        if(num1>num2){
+            console.log(num1+" is greater than "+num2);
+        }
+        else{
+            console.log(num2+" is greater than "+num1);
+        }
+
+    }
+
+    printNames("Naveen");
+    printNames("Mukesh");
+
+    compareNumbers(10,20);
+
+
+
+
+
+
+
 
 
     function getFutureDate(days) {

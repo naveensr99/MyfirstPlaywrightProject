@@ -21,6 +21,8 @@ test("Test to book for an event", async ({ browser }) => {
     const totalSeatstxtfld = page.locator('#total-seats');
     const addEventBtn = page.getByText('+ Add Event');
 
+    const eventsHub = page.locator('[id="nav-events"]');
+
     const eventCreatedMsg=page.getByText('Event created!');
 
 
@@ -38,12 +40,15 @@ test("Test to book for an event", async ({ browser }) => {
     const futureDate = getFutureDate(5);
     const futureDatesplit=futureDate.split('-');
     const dates=futureDatesplit[1]+futureDatesplit[2]+'00'+futureDatesplit[0]+'1212PM';
-    
 
 
+    const event_cards= page.locator('[id="event-card"]');
 
     //this helps to genereate the a unique event title using test event
     const eventTitle = `Test Event ${Date.now()}`;
+
+
+
 
 
     await page.goto("https://eventhub.rahulshettyacademy.com");
@@ -66,30 +71,53 @@ test("Test to book for an event", async ({ browser }) => {
 
     console.log(eventTitle);
 
-    await eventTitletxtfld.fill(eventTitle);
+    // await eventTitletxtfld.fill(eventTitle);
 
 
-    await categorySelectId.selectOption('Festival');
+    // await categorySelectId.selectOption('Festival');
 
-    await cityTxtfld.fill('Bangalore');
+    // await cityTxtfld.fill('Bangalore');
 
-    await venueTxtfld.fill('Holi Celebration, neat the bharthiya city, Bangalore');
+    // await venueTxtfld.fill('Holi Celebration, neat the bharthiya city, Bangalore');
 
-    await eventdateandTime.pressSequentially(dates);
-   
+    // await eventdateandTime.pressSequentially(dates);
 
+    // await priceTxtfld.fill('500.00');
 
-    await priceTxtfld.fill('500.00');
-
-    await totalSeatstxtfld.fill('500');
+    // await totalSeatstxtfld.fill('500');
 
 
-    await addEventBtn.click();
+    // await addEventBtn.click();
 
 
-    await expect(eventCreatedMsg).toBeVisible();
+    // await expect(eventCreatedMsg).toBeVisible();
+
+
+    await eventsHub.click();    
+    await event_cards.first().waitFor({ state: 'visible' });
+
+    // const eventCards=await event_cards.allTextContents();
+
+    const eventCardsCount=await event_cards.count();
+
+
+    for(let i=0;i<eventCardsCount;i++){
+        await event_cards.nth(i).waitFor();
+        const eventName=await event_cards.nth(i).locator('h3').textContent();
+        console.log(eventName);
+    }
+
+
+
+
+
+    
+
+
 
     await page.pause();
+
+    
 
 
 
