@@ -25,7 +25,7 @@ test("Test to book for an event", async ({ browser }) => {
 
     const eventCreatedMsg=page.getByText('Event created!');
 
-
+    
 
     const mangageEventsBtn = page.getByText("Manage Events");
 
@@ -46,6 +46,16 @@ test("Test to book for an event", async ({ browser }) => {
 
     //this helps to genereate the a unique event title using test event
     const eventTitle = `Test Event ${Date.now()}`;
+
+
+    const defaultTicketCount=page.locator('#ticket-count');
+
+    const fullName=page.getByLabel('Full Name');
+
+    const Email=page.locator('#customer-email');
+
+    const phoneTxtfld=page.locator('#customer-email');
+
 
 
 
@@ -102,12 +112,34 @@ test("Test to book for an event", async ({ browser }) => {
 
     // Trying to check the new branch
 
+    let seatsBeforeBooking;
 
     for(let i=0;i<eventCardsCount;i++){
         await event_cards.nth(i).waitFor();
         const eventName=await event_cards.nth(i).locator('h3').textContent();
-        console.log(eventName);
+        if(eventName==='Test Event 1777440017815'){
+            await expect(eventName).toBeVisible();
+            console.log(eventName);
+            const seatsleft=await event_cards.nth(i).locator('[class="text-xs font-semibold text-emerald-600"]').textContent();
+            seatsBeforeBooking=seatsleft.split(' ')[0];
+            console.log("seatsBeforeBooking :"+seatsBeforeBooking);
+
+            await expect(event_cards.nth(i).locator("#book-now-btn")).toBeVisible();
+            await event_cards.nth(i).locator("#book-now-btn").click();
+        }
+
+        expect
+
+
+
+
+
     }
+
+
+
+
+
 
 
 
