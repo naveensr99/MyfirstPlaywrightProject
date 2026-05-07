@@ -48,17 +48,19 @@ test("Test to book for an event", async ({ browser }) => {
     const eventTitle = `Test Event ${Date.now()}`;
 
 
-    const defaultTicketCount=page.locator('#ticket-count');
+   
 
     const fullName=page.getByLabel('Full Name');
 
     const Email=page.locator('#customer-email');
 
-    const phoneTxtfld=page.locator('#customer-email');
+    const phoneTxtfld=page.locator('#phone');
+
+    const confirmBookingBtn=page.locator('.confirm-booking-btn');
 
 
 
-
+   
 
 
     await page.goto("https://eventhub.rahulshettyacademy.com");
@@ -118,7 +120,6 @@ test("Test to book for an event", async ({ browser }) => {
         await event_cards.nth(i).waitFor();
         const eventName=await event_cards.nth(i).locator('h3').textContent();
         if(eventName==='Test Event 1777440017815'){
-            await expect(eventName).toBeVisible();
             console.log(eventName);
             const seatsleft=await event_cards.nth(i).locator('[class="text-xs font-semibold text-emerald-600"]').textContent();
             seatsBeforeBooking=seatsleft.split(' ')[0];
@@ -127,14 +128,77 @@ test("Test to book for an event", async ({ browser }) => {
             await expect(event_cards.nth(i).locator("#book-now-btn")).toBeVisible();
             await event_cards.nth(i).locator("#book-now-btn").click();
         }
-
-        expect
-
-
-
-
-
     }
+
+
+
+    const defaultTicketCount=await page.locator('#ticket-count').textContent();
+
+
+    await expect(defaultTicketCount).toBe('1');
+    await fullName.fill('Naveen Kumar');
+    await Email.fill('customer123@gmail.com');
+    await phoneTxtfld.fill('9876543210');
+
+    await confirmBookingBtn.click();
+
+
+    // const bookingRefNumber=await page.locator('.bg-indigo-50 border border-indigo-100 rounded-xl p-4 mb-5 text-left space-y-2').locator("flex items-center justify-between text-sm").nth(1).textContent();
+    
+    const bookingRefNumber= await page.locator('.bg-indigo-50.border.border-indigo-100.rounded-xl.p-4.mb-5.text-left.space-y-2').locator('.flex.items-center.justify-between.text-sm').nth(0).textContent();
+
+    const bookingRefNumberText=await bookingRefNumber.split(' ')[1];
+
+    console.log("Booking reference number :"+bookingRefNumberText);
+
+    const myBookinglink=page.locator('#nav-bookings');
+
+    await myBookinglink.click();
+
+
+    //Assertion to check if the url contains bookings after clicking on my bookings link
+    await  expect(page.url().includes('bookings')).toBeTruthy();
+
+
+    //Get all booking cards (locate by id #booking-card)
+    const bookingCards= await page.locator('#booking-card');
+
+    await bookingCards.first().waitFor({ state: 'visible' });
+
+    // Assert the first booking card is visible
+    await expect(bookingCards.nth(0).isVisible()).toBeTruthy();
+
+    const bookingCardsCount=await bookingCards.count();
+    // Filter booking cards for the one that contains an element with class .booking-ref matching your bookingRef text
+    //bookingRefNumberText
+    for(let i=0;i<bookingCardsCount;i++){
+        await bookingCards.nth(i).waitFor();
+        console.log(bookingCards.nth(i).textContent());
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
