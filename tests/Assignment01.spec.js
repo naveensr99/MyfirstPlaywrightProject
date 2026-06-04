@@ -26,7 +26,6 @@ test("Test to book for an event", async ({ browser }) => {
     const eventCreatedMsg=page.getByText('Event created!');
 
     
-
     const mangageEventsBtn = page.getByText("Manage Events");
 
     //future date helper
@@ -46,10 +45,7 @@ test("Test to book for an event", async ({ browser }) => {
 
     //this helps to genereate the a unique event title using test event
     const eventTitle = `Test Event ${Date.now()}`;
-
-
-   
-
+    
     const fullName=page.getByLabel('Full Name');
 
     const Email=page.locator('#customer-email');
@@ -57,10 +53,6 @@ test("Test to book for an event", async ({ browser }) => {
     const phoneTxtfld=page.locator('#phone');
 
     const confirmBookingBtn=page.locator('.confirm-booking-btn');
-
-
-
-   
 
 
     await page.goto("https://eventhub.rahulshettyacademy.com");
@@ -83,26 +75,26 @@ test("Test to book for an event", async ({ browser }) => {
 
     console.log(eventTitle);
 
-    // await eventTitletxtfld.fill(eventTitle);
+    await eventTitletxtfld.fill(eventTitle);
 
 
-    // await categorySelectId.selectOption('Festival');
+    await categorySelectId.selectOption('Festival');
 
-    // await cityTxtfld.fill('Bangalore');
+    await cityTxtfld.fill('Bangalore');
 
-    // await venueTxtfld.fill('Holi Celebration, neat the bharthiya city, Bangalore');
+    await venueTxtfld.fill('Holi Celebration, neat the bharthiya city, Bangalore');
 
-    // await eventdateandTime.pressSequentially(dates);
+    await eventdateandTime.pressSequentially(dates);
 
-    // await priceTxtfld.fill('500.00');
+    await priceTxtfld.fill('500.00');
 
-    // await totalSeatstxtfld.fill('500');
-
-
-    // await addEventBtn.click();
+    await totalSeatstxtfld.fill('500');
 
 
-    // await expect(eventCreatedMsg).toBeVisible();
+    await addEventBtn.click();
+
+
+    await expect(eventCreatedMsg).toBeVisible();
 
 
     await eventsHub.click();    
@@ -119,7 +111,7 @@ test("Test to book for an event", async ({ browser }) => {
     for(let i=0;i<eventCardsCount;i++){
         await event_cards.nth(i).waitFor();
         const eventName=await event_cards.nth(i).locator('h3').textContent();
-        if(eventName==='Test Event 1777440017815'){
+        if(eventName===eventTitle){
             console.log(eventName);
             const seatsleft=await event_cards.nth(i).locator('[class="text-xs font-semibold text-emerald-600"]').textContent();
             seatsBeforeBooking=seatsleft.split(' ')[0];
@@ -149,13 +141,16 @@ test("Test to book for an event", async ({ browser }) => {
 
     const bookingRefNumberText=await bookingRefNumber.split(' ')[1];
 
-    console.log("Booking reference number :"+bookingRefNumberText);
+    const bookingRefNumberTextSplit=bookingRefNumberText.split('f')[1];
+
+    console.log("Booking reference number :"+bookingRefNumberTextSplit);
 
     const myBookinglink=page.locator('#nav-bookings');
 
     await myBookinglink.click();
 
 
+    await page.waitForURL('**/bookings');
     //Assertion to check if the url contains bookings after clicking on my bookings link
     await  expect(page.url().includes('bookings')).toBeTruthy();
 
@@ -163,18 +158,52 @@ test("Test to book for an event", async ({ browser }) => {
     //Get all booking cards (locate by id #booking-card)
     const bookingCards= await page.locator('#booking-card');
 
+    const bookingref= await page.locator('.booking-ref');
+
     await bookingCards.first().waitFor({ state: 'visible' });
 
     // Assert the first booking card is visible
     await expect(bookingCards.nth(0).isVisible()).toBeTruthy();
 
-    const bookingCardsCount=await bookingCards.count();
+    await expect(bookingref.nth(0)).toBeVisible();
+
+    const bookingrefCount=await bookingref.count();
     // Filter booking cards for the one that contains an element with class .booking-ref matching your bookingRef text
     //bookingRefNumberText
-    for(let i=0;i<bookingCardsCount;i++){
-        await bookingCards.nth(i).waitFor();
-        console.log(bookingCards.nth(i).textContent());
+    for(let j=0;j<bookingrefCount;j++){
+        const bookingRefText=await bookingref.nth(j).textContent();
+        if(bookingRefText.includes(bookingRefNumberTextSplit)){
+            console.log("Booking reference found in booking cards :"+bookingRefText);
+            break;
+        }
     }
+
+
+
+    await eventsHub.click();    
+    await event_cards.first().waitFor({ state: 'visible' });
+    
+    // const eventCards=await event_cards.allTextContents();
+
+    const eventCardsCount2=await event_cards.count();
+
+    // Trying to check the new branch
+
+    let seatsAfterBooking;
+
+    for(let i=0;i<eventCardsCount2;i++){
+        await event_cards.nth(i).waitFor();
+        const eventName=await event_cards.nth(i).locator('h3').textContent();
+        if(eventName===eventTitle){
+            console.log(eventName);
+            const seatsleft=await event_cards.nth(i).locator('[class="text-xs font-semibold text-emerald-600"]').textContent();
+            seatsAfterBooking=seatsleft.split(' ')[0];
+            expect(parseInt(seatsAfterBooking)).toBe(parseInt(seatsBeforeBooking)-1);
+            console.log("seatsAfterBooking :"+seatsAfterBooking);
+        }
+    }
+
+
 
 
 
