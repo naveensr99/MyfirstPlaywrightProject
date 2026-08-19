@@ -179,7 +179,6 @@ test("Test to book for an event", async ({ browser }) => {
     }
 
 
-
     await eventsHub.click();    
     await event_cards.first().waitFor({ state: 'visible' });
     
@@ -206,39 +205,6 @@ test("Test to book for an event", async ({ browser }) => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    
 
 
 
