@@ -22,14 +22,19 @@ const config=(
   reporter  : 'html',
 
   use:{
-    //browser name defining 
+    // browser name defining for Microsoft Edge
     browserName: 'chromium',
-    headless : false
-  }
-
+    channel: 'msedge',
+    headless : false,
+    screenshot : 'only',
+    trace : 'retain-on-failure'
+    // if its 'retain-on-failure' then it will trace only for the failed test case
+    // if its 'on-first-retry' then it will trace for the first retry of the failed test case
+    // if its 'off' then it will not trace for any test case 
+    // if its 'on' then it will trace for the entire test case 
+  
 }
-)
-
+})
 // the whole config exported accross all the test folder
 module.exports=config
 

@@ -12,7 +12,7 @@ test("Lanunching koerber one",async({browser})=>{
     let employees=["Naveen","Mukesh","Kicha","Suresh"];
 
     for(let i=0;i<employees.length;i++){    
-        console.log("Weclcome"+employees[i]+"to Koerber");                              
+        console.log("Weclcome "+employees[i]+"to Koerber");                              
     }   
     //for loop
 
