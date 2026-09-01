@@ -1,8 +1,5 @@
 const { test, expect } = require('@playwright/test');
 
-
-    
-
     // Helper function to set up the bowser context and navigate to the specified URL
     async function   loginAndGoToBooking(browser,url) {
     const context = await browser.newContext();
@@ -16,7 +13,7 @@ const { test, expect } = require('@playwright/test');
     
 
 
-    await emailField.fill("naveen123@gmail.com");
+    await emailField.fill("nnn123@gmail.com");
     await passwordField.fill("Kicha@4342");
     await loginBtn.click();
     await browserEventLink.waitFor();
@@ -35,7 +32,6 @@ const { test, expect } = require('@playwright/test');
         const eventsBtn= page.locator("[id='nav-events']");
         
         await eventsBtn.click();
-
 
 
         await page.waitForLoadState('networkidle');
