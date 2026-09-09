@@ -12,7 +12,7 @@ const { test, expect } = require('@playwright/test');
     const loginBtn = page.locator("#login-btn");
     const browserEventLink = page.getByText("Browse Events →");
 
-    await emailField.fill("naveen123@gmail.com");
+    await emailField.fill("Jackie@gmail.com");
     await passwordField.fill("Kicha@4342");
     await loginBtn.click();
     await browserEventLink.waitFor();
@@ -22,7 +22,7 @@ const { test, expect } = require('@playwright/test');
     }
 
 
-    test('Refund Eligibility Check', async ({ browser }) => {
+    test('Single ticket booking is eligible for refund', async ({ browser }) => {
         
         const page=await loginAndGoToBooking(browser, 'https://eventhub.rahulshettyacademy.com');
 
@@ -58,9 +58,7 @@ const { test, expect } = require('@playwright/test');
         //Step 3 Navigate to booking detail
         
         await page.getByText('View My Bookings').click(); 
-
         await page.getByText('My Bookings').first().waitFor();
-
 
         await page.waitForLoadState('networkidle');
         const pageURL=await page.url();
@@ -72,6 +70,35 @@ const { test, expect } = require('@playwright/test');
 
         const bookingDetails=page.locator('[id="booking-card"]').getByText('View Details');
         await bookingDetails.first().click();
+
+        //Assertion text Booking information is visible on the booking detail page
+        await expect(page.getByText('Booking Information')).toBeVisible();
+
+        //Step 4 Validate booking ref
+
+        const BookingRef=await page.locator('.font-mono.font-bold.text-indigo-600.bg-indigo-50.px-3.py-1.rounded-lg.text-sm').textContent();
+        console.log("Booking Reference:", BookingRef);
+
+
+        // Assert validation : "first character of booking ref equals first character of event title"
+        
+        expect(BookingRef.trim().startsWith("D")).toBeTruthy();
+
+
+        //Step 5 — Check refund eligibility
+
+        await page.getByRole('button', { name: 'Check eligibility for refund?' }).click();
+
+        // Assert: spinner element (#refund-spinner) is immediately visible
+        await expect(page.locator('#refund-spinner')).toBeVisible();
+
+        await expect(page.locator('#refund-spinner')).toBeHidden({ timeout: 6000 });
+
+
+    
+
+
+
 
         
 
